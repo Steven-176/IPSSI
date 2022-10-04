@@ -2,11 +2,15 @@
     display: inline-block;
     position: relative;
     padding: 100px;
+    border-collapse: collapse;
+    border: 10px;
+    color: yellow;
 }
 
 .l2 {
     display: flexbox;
     flex-direction: row;
+    color: aqua;
     position: top;
     padding: 0px;
 }
