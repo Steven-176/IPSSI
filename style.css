@@ -1,0 +1,12 @@
+.Joueur{
+    display: inline-block;
+    position: relative;
+    padding: 100px;
+}
+
+.l2 {
+    display: flexbox;
+    flex-direction: row;
+    position: top;
+    padding: 0px;
+}
