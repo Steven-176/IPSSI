@@ -1,16 +1,72 @@
-.Joueur{
-    display: inline-block;
+.Joueurs, .Clubs{
+    display: block;
+    padding: 0px;
+    margin: 20px;
     position: relative;
-    padding: 100px;
-    border-collapse: collapse;
-    border: 10px;
-    color: yellow;
+
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
-.l2 {
-    display: flexbox;
-    flex-direction: row;
-    color: aqua;
-    position: top;
-    padding: 0px;
+/* .Joueurs :last-child {
+    display: inline-flexbox;
+    justify-content: space-around;
+} */
+
+body {
+    margin: 0px;
+    text-align: justify
+}
+
+.infos {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+h1, .title {
+    margin-top: 0px;
+    text-align: center;
+    padding: 30px 0px;
+    background-color: green;
+    font-family: 'Bungee Spice', 'Oswald', sans-serif;
+    color: white;
+}
+
+.Carte, .Equipe{
+    display: inline-block;
+    padding: 15px;
+}
+
+th {
+    padding: 10px;
+    font-size: 20px;
+}
+
+td {
+    padding: 5px;
+    border: 10%;
+}
+
+tbody, thead, .nomClub {
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+
+table {
+    background-color: #FFD700;
+    opacity: 80%;
+}
+
+img {
+    background-color: white;
+    border: 2px solid;
+}
+
+* {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+}
+
+img {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
 }

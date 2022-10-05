@@ -5,73 +5,196 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="style.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400&display=swap" rel="stylesheet">
+
     <title>Document</title>
 </head>
 <body>
     <?php
-        $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, "https://api.airtable.com/v0/appljQzgZO6yDwebG/Joueur?view=Grid%20view");
+        /***************************************
+         *  Acquisition de la base de données  *
+         ***************************************/
+        function acquisitionTableau ($tableauURL, $key) {
+            $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, $tableauURL);
 
-        $authorization =  "Authorization: Bearer keylGy9dvvUc5clRX";
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json', $authorization));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json', $key));
 
-        $certificate = "C:\wamp64\cacert.pem";
-        curl_setopt($curl, CURLOPT_CAINFO, $certificate);
-        curl_setopt($curl, CURLOPT_CAPATH, $certificate);
+            //
+            $certificate = "C:\wamp64\cacert.pem";
+            curl_setopt($curl, CURLOPT_CAINFO, $certificate);
+            curl_setopt($curl, CURLOPT_CAPATH, $certificate);
 
-    //    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+            //Acquisition du tableau "Joueur" de Airtable
+            $resultat = curl_exec($curl);
 
-        $resultat = curl_exec($curl);
+            curl_close($curl);
 
-        curl_close($curl);
+            return $resultat;
+        }
 
-        function getTable($table, $ligne) {
         
-            $tab = [];
-            
-            $tab[0] = $table['records'][$ligne]['fields']['prenom'];
-            $tab[1] = $table['records'][$ligne]['fields']['nom'];
-            $tab[2] = $table['records'][$ligne]['fields']['poste'];
-            $tab[3] = $table['records'][$ligne]['fields']['nationalite'];
-            $tab[4] = $table['records'][$ligne]['fields']['nom (from club)'][0];
-            $tab[5] = $table['records'][$ligne]['fields']['numero_maillot'];
-            $tab[6] = $table['records'][$ligne]['fields']['match_joues'];
-            $tab[7] = $table['records'][$ligne]['fields']['buts_marques'];
-            $tab[8] = $table['records'][$ligne]['fields']['passes_decisives'];
-
+         /***************************************
+         *  Réorganisation du tableau "Joueur  *
+         ***************************************/
+        function getTableJoueur($table, $ligne) {
+            $tab = array(
+                'Prénom Nom' => $table['records'][$ligne]['fields']['prenom']."<br />".$table['records'][$ligne]['fields']['nom'],
+                'Photo' => $table['records'][$ligne]['fields']['Photo'],
+                'Nationalité' => $table['records'][$ligne]['fields']['nationalite'],
+                'Poste' => $table['records'][$ligne]['fields']['poste'],
+                'Club' => $table['records'][$ligne]['fields']['nom (from club)'][0],
+                'Numéro maillot' => $table['records'][$ligne]['fields']['numero_maillot'],
+                'Match Joués' => $table['records'][$ligne]['fields']['match_joues'],
+                'But Marqués' => $tab[7] = $table['records'][$ligne]['fields']['buts_marques'],
+                'Passes Décisives' => $table['records'][$ligne]['fields']['passes_decisives'],
+            );
             return $tab;
         }
 
-        
+
+        /**************************************
+         *  Réorganisation du tableau "Club"  *
+         **************************************/
+        function getTableClub($table, $ligne) {
+            $tab = array(
+                'Nom' => $table['records'][$ligne]['fields']['nom'],
+                'Logo' => $table['records'][$ligne]['fields']['Logo'],
+                'Classement' => $table['records'][$ligne]['fields']['classement'],
+                'Ville' => $table['records'][$ligne]['fields']['ville'],
+                'Année de création' => $table['records'][$ligne]['fields']['annee_de_creation'],
+                'Entraîneur' => $table['records'][$ligne]['fields']['entraineur'],
+            );
+            foreach ($table['records'][$ligne]['fields']['nom (from joueur)'] as $joueur) {
+                $tab['Joueur'][] = $joueur;
+            }
+            return $tab;
+        }
+
+        //Clé d'accés
+        $authorization =  "Authorization: Bearer keylGy9dvvUc5clRX";
+
+        /************************************/
+
+        //Acquisition de la base de données "Joueur"
+        $resultatJoueur = acquisitionTableau("https://api.airtable.com/v0/appljQzgZO6yDwebG/Joueur?view=Grid%20view", $authorization);
+    
+        //Acquisition de la base de données "Club"
+        $resultatClub = acquisitionTableau("https://api.airtable.com/v0/appljQzgZO6yDwebG/Club?view=Grid%20view", $authorization);
+
+        /************************************/
 
         // Converti en PHP le JSON
-        $resultat = json_decode($resultat, true);
+        $resultatJoueur = json_decode($resultatJoueur, true);
+        $resultatClub = json_decode($resultatClub, true);
 
+        /************************************/
+       
+        //Réorganisation tableau "Joueur"
         $tableau_joueur = [];
-
-        for ($i = 0 ; $i < count($resultat['records']) ; $i++){
-            $nomJoueur = getTable($resultat, $i);
-
-            $tableau_joueur[$i] = $nomJoueur;
+        for ($i = 0 ; $i < count($resultatJoueur['records']) ; $i++){
+            $tableau_joueur[$i] = getTableJoueur($resultatJoueur, $i);
         }
 
-//        var_dump($tableau_joueur);
+        //Réorganisation tableau "CLub"
+        $tableau_club = [];
+        for ($i = 0 ; $i < count($resultatClub['records']) ; $i++){
+            $tableau_club[$i] = getTableClub($resultatClub, $i);
 
-        echo '<h1>Premier League</h1>'.
-        '<div><h2>Joueur</h2></div>';
+            $tableau_club[$i]['Joueur'] = join(',<br />', $tableau_club[$i]['Joueur']);
+        }
+        
+        /************************************/
+
+        /*************************
+        *  Affichage de la page  *
+        **************************/
+
+        echo '<h1>Premier League</h1>';
+
+        /*************************** 
+         *  Affichage des Joueurs  *
+         ***************************/
+        echo '<div class="Joueurs"><h2 class="title">Joueurs</h2>';
 
         for ($i = 0 ; $i < count($tableau_joueur) ; $i++) {
-            echo '<div class="Joueur">';
-            for($j = 0 ; $j < count($tableau_joueur[$i]) ; $j++){
-               echo '<p class=l'.$j.'>'. $tableau_joueur[$i][$j] .'</p>';
-            }            
-            echo '</div>';
+            echo '<div class="Carte"><table>
+            <thead>
+                <tr>
+                    <th>'.$tableau_joueur[$i]['Prénom Nom'].'</th>
+                    <th><img src="'.$tableau_joueur[$i]['Photo'][0]['url'].'"></th>
+                </tr>
+            </thead>
+            <tbody><span class="bodyinfos">';
+            foreach($tableau_joueur[$i] as $infos => $value){
+                if($infos != 'Prénom Nom' && $infos != 'Photo'){
+                    echo '<tr><td class="infos">'.$infos.' :</td><td class="value">'.$value.'</td></tr>';
+                }
+            }
+            echo '</span></tbody></table></div>';
         }
 
+        /*******************************
+         *  Formulaire ajout de joueur *
+         *******************************/
+
+        // echo '<div class="Carte"><form>
+        // <table>
+        //     <thead>
+        //         <tr>
+        //             <th>    <input type="text" placeholder="Prénom">    <br />  <input type="text" placeholder="Nom">    </th>
+        //             <th>    <input type="url" placeholder="URL image du joueur">    </th>
+        //         </tr>
+        //     </thead>
+        //     <tbody><span class="bodyinfos">';
+        //     foreach($tableau_joueur[0] as $infos => $value){
+        //         switch ($infos) {
+
+        //             case ''
+
+        //         }
+        //     }
+        // echo '</span></tbody></table></form></div>';
+
+
+        echo '</div>';
+
+        echo '<div class="Clubs"><h2 class="title">Clubs</h2>';
+
+        for ($i = 0 ; $i < count($tableau_club) ; $i++) {
+            echo '<div class="Equipe"><table>
+            <tr>
+            <theader>
+                <th rowspan="2" class="nomClub">'.$tableau_club[$i]['Nom'].'<br /><img src="'.$tableau_club[$i]['Logo'][0]['url'].'"></th>
+            </theader>';
+
+            foreach($tableau_club[$i] as $infos => $value){
+                if($infos != 'Nom' && $infos != 'Logo'){
+                    echo '<td class="infos">'.$infos.' :</td>';
+                }
+            }            
+            echo '</tr><tr>';
+
+            foreach($tableau_club[$i] as $infos => $value){
+                if($infos != 'Nom' && $infos != 'Logo'){
+                    echo '<td class="value">'.$value.'</td>';
+                }
+            }
+            echo '</tr></table></div>';
+        }
+        echo '</div>'
     ?>
 </body>
 </html>
