@@ -42,20 +42,7 @@ function addPlayer() {
         }]
     };
 
-    console.log(prenomJoueur+', type : '+typeof(prenomJoueur));
-    console.log(nomJoueur+', type : '+typeof(nomJoueur));
-    console.log(imageJoueur+', type : '+typeof(imageJoueur));
-    console.log(nationaliteJoueur+', type : '+typeof(nationaliteJoueur));
-    console.log(posteJoueur+', type : '+typeof(posteJoueur));
-    console.log(clubJoueur+', type : '+typeof(clubJoueur));
-    console.log(maillotJoueur+', type : '+typeof(maillotJoueur));
-    console.log(matchsJouesJoueur+', type : '+typeof(matchsJouesJoueur));
-    console.log(butsMarquesJoueur+', type : '+typeof(butsMarquesJoueur));
-    console.log(passesDecisivesJoueur+', type : '+typeof(passesDecisivesJoueur));
-
-    console.log(data);
-
-    fetch(URL, {
+fetch(URL, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)

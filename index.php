@@ -62,7 +62,6 @@
                 'Match Joués' => $table['records'][$ligne]['fields']['match_joues'],
                 'But Marqués' => $tab[7] = $table['records'][$ligne]['fields']['buts_marques'],
                 'Passes Décisives' => $table['records'][$ligne]['fields']['passes_decisives'],
-                'Club' => $table['records'][$ligne]['fields']['passes_decisives'],
             );
             return $tab;
         }
@@ -136,6 +135,7 @@
         for ($i = 0 ; $i < count($tableau_joueur) ; $i++) {
             echo '<div class="Carte"><table>
             <thead>
+                <tr><th class="buttonModif" colspan="2"><button class="realButtonModif">Modif</button></th></tr>
                 <tr>
                     <th>'.$tableau_joueur[$i]['Prénom Nom'].'</th>
                     <th><img src="'.$tableau_joueur[$i]['Photo'][0]['url'].'"></th>
