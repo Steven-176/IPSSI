@@ -15,6 +15,10 @@
     float: left;
 }
 
+.joueurID {
+    display: none;
+}
+
 /* .Joueurs :last-child {
     display: inline-flexbox;
     justify-content: space-around;
