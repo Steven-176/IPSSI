@@ -1,7 +1,4 @@
-const API_KEY = 'keylGy9dvvUc5clRX';
-const URL = `https://api.airtable.com/v0/appljQzgZO6yDwebG/Joueur?api_key=${API_KEY}`;
-
-var ID;
+var IDJoueur;
 
 const formulaire = document.querySelector('#ajout')
 formulaire.addEventListener('submit', (e)=>{
@@ -9,6 +6,9 @@ formulaire.addEventListener('submit', (e)=>{
     addPlayer()
 })
 function addPlayer() {
+
+    const API_KEY = 'keylGy9dvvUc5clRX';
+    const URL = `https://api.airtable.com/v0/appljQzgZO6yDwebG/Joueur?api_key=${API_KEY}`;  
 
     var prenomJoueur = document.querySelector("#Prénom_modif").value;
     var nomJoueur = document.querySelector("#NomJoueur_modif").value;
@@ -21,10 +21,10 @@ function addPlayer() {
     var butsMarquesJoueur = parseInt(document.querySelector("#Buts_modif").value);
     var passesDecisivesJoueur = parseInt(document.querySelector("#PassesD_modif").value);
 
-    if (ID != null) {
+    if (IDJoueur != null) {
         let data = {
             'records': [{
-                'id' : ID,
+                'id' : IDJoueur,
                 'fields': {
                     'nom' : nomJoueur,
                     'prenom' : prenomJoueur,
@@ -107,7 +107,7 @@ function addPlayer() {
 
 function modifPlayer(i) {
 
-    ID = document.querySelector("#IDJoueur_"+i).innerHTML;
+    IDJoueur = document.querySelector("#IDJoueur_"+i).innerHTML;
 
     var prenomJoueur = document.querySelector("#Prénom_"+i).innerHTML;
     var nomJoueur = document.querySelector("#NomJoueur_"+i).innerHTML;

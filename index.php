@@ -231,10 +231,12 @@
 
         $keyinfos = array_keys($tableau_club[0]);
 
+        for ($i = 0 ; $i < count($tableau_club) ; $i++) {
+
             echo '<div class="Equipe"><table>
             <tr>
             <theader>
-                <th rowspan="2" class="nomClub">'.$tableau_club[$i]['NomClub'].'<br /><input class="ImageFoot" id="'.$keyinfos[3].'_modif" type="text" placeholder="URL image du joueur" required><span class="validity"></span></th>
+                <th rowspan="2" class="nomClub">'.$tableau_club[$i]['NomClub'].'<br /><img class="imgClub" src="'.$tableau_club[$i]['Logo'][0]['url'].'"></img></th>
             </theader>';
 
             foreach($tableau_club[$i] as $infos => $value){
@@ -250,11 +252,11 @@
                 }
             }
             echo '</tr></table></div>';
+        }
 
-
-        // /******************************
-        //  *  Formulaire ajout de club  *
-        //  ******************************/
+        /******************************
+         *  Formulaire ajout de club  *
+         ******************************/
 
         // echo '<div class="Clubs"><h2 class="title">Clubs</h2>';
 
@@ -282,7 +284,7 @@
         //     echo '</tr></table></div>';
         // }
 
-        // echo '</div>'
+        echo '</div>'
     ?>
 </body>
 </html>
