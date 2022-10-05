@@ -15,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400&display=swap" rel="stylesheet">
 
+    <script src="script.js" defer></script>
+
     <title>Document</title>
 </head>
 <body>
@@ -56,10 +58,11 @@
                 'Nationalité' => $table['records'][$ligne]['fields']['nationalite'],
                 'Poste' => $table['records'][$ligne]['fields']['poste'],
                 'Club' => $table['records'][$ligne]['fields']['nom (from club)'][0],
-                'Numéro maillot' => $table['records'][$ligne]['fields']['numero_maillot'],
+                'N° Maillot' => $table['records'][$ligne]['fields']['numero_maillot'],
                 'Match Joués' => $table['records'][$ligne]['fields']['match_joues'],
                 'But Marqués' => $tab[7] = $table['records'][$ligne]['fields']['buts_marques'],
                 'Passes Décisives' => $table['records'][$ligne]['fields']['passes_decisives'],
+                'Club' => $table['records'][$ligne]['fields']['passes_decisives'],
             );
             return $tab;
         }
@@ -70,6 +73,7 @@
          **************************************/
         function getTableClub($table, $ligne) {
             $tab = array(
+                'ID' => $table['records'][$ligne]['id'],
                 'Nom' => $table['records'][$ligne]['fields']['nom'],
                 'Logo' => $table['records'][$ligne]['fields']['Logo'],
                 'Classement' => $table['records'][$ligne]['fields']['classement'],
@@ -150,23 +154,59 @@
          *  Formulaire ajout de joueur *
          *******************************/
 
-        // echo '<div class="Carte"><form>
-        // <table>
-        //     <thead>
-        //         <tr>
-        //             <th>    <input type="text" placeholder="Prénom">    <br />  <input type="text" placeholder="Nom">    </th>
-        //             <th>    <input type="url" placeholder="URL image du joueur">    </th>
-        //         </tr>
-        //     </thead>
-        //     <tbody><span class="bodyinfos">';
-        //     foreach($tableau_joueur[0] as $infos => $value){
-        //         switch ($infos) {
-
-        //             case ''
-
-        //         }
-        //     }
-        // echo '</span></tbody></table></form></div>';
+        echo '<div class="Carte"><form id="ajout">
+        <table>
+            <thead>
+                <tr>
+                    <th>    
+                        <input type="text" id="prenomJoueur" placeholder="Prénom" maxlength="16" required><span class="validity"></span><br />
+                        <input type="text" id="nomJoueur" placeholder="Nom" maxlength="16" required><span class="validity"></span>    
+                    </th>
+                    <th>    <input class="ImageFoot" id="imageJoueur" type="text" placeholder="URL image du joueur" required><span class="validity"></span></th>
+                </tr>
+            </thead>
+            <tbody><span class="bodyinfos">';
+            foreach($tableau_joueur[0] as $infos => $value){
+                switch ($infos) {
+                    case 'Nationalité' :
+                        echo '<tr><td class="infos">'.$infos.' :</td><td class="value"><input type="text" maxlength="16" id="nationaliteJoueur" required><span class="validity"></span></td></tr>';
+                        break;
+                    case 'Poste' :
+                        echo '<tr><td class="infos">'.$infos.' :</td>
+                        <td class="value"><select id="posteJoueur" required >
+                        <option value="" selected disabled hidden>Sélectionner poste</option>
+                        <option value="Gardien">Gardien</option>
+                        <option value="Défenseur">Défenseur</option>
+                        <option value="Milieu">Milieu</option>
+                        <option value="Attaquant">Attaquant</option>
+                        </select><span class="validity"></span></td></tr>';
+                        break;                    
+                    case 'Club' :
+                        echo '<tr><td class="infos">'.$infos.' :</td>
+                        <td class="value"><select id="clubJoueur" required >
+                        <option value="" selected disabled hidden>Sélectionner club existant</option>';    
+                            foreach($tableau_club as $clubid){
+                                echo '<option value="'.$clubid['ID'].'">'.$clubid['Nom'].'</option>';
+                            }
+                        echo '</select><span class="validity"></span></td></tr>';
+                        break;
+                    case 'N° Maillot' :
+                        echo '<tr><td class="infos">'.$infos.' :</td><td class="value"><input type="number" min="1" max="99" placeholder="1 - 99" id="maillotJoueur" required><span class="validity"></span></td></tr>';
+                        break;
+                    case 'Match Joués' :
+                        echo '<tr><td class="infos">'.$infos.' :</td><td class="value"><input type="number" min="0" max="1000" placeholder="0 - 1000" id="matchsJouesJoueur" required><span class="validity"></span></td></tr>';
+                        break;
+                    case 'But Marqués' :
+                        echo '<tr><td class="infos">'.$infos.' :</td><td class="value"><input type="number" min="0" max="1000" placeholder="0 - 1000" id="butsMarquesJoueur" required><span class="validity"></span></td></tr>';
+                        break;
+                    case 'Passes Décisives' :
+                        echo '<tr><td class="infos">'.$infos.' :</td><td class="value"><input type="number" min="0" max="1000" placeholder="0 - 1000" id="passesDecisivesJoueur" required><span class="validity"></span></td></tr>';
+                        break;
+                }
+            }
+        echo '<tr><td colspan="2"><input type="submit" value="Ajouter le joueur"></td></tr></span>';
+        
+        echo '</tbody></table></form></div>';
 
 
         echo '</div>';
@@ -181,14 +221,14 @@
             </theader>';
 
             foreach($tableau_club[$i] as $infos => $value){
-                if($infos != 'Nom' && $infos != 'Logo'){
+                if($infos != 'Nom' && $infos != 'Logo' && $infos != 'ID'){
                     echo '<td class="infos">'.$infos.' :</td>';
                 }
             }            
             echo '</tr><tr>';
 
             foreach($tableau_club[$i] as $infos => $value){
-                if($infos != 'Nom' && $infos != 'Logo'){
+                if($infos != 'Nom' && $infos != 'Logo' && $infos != 'ID'){
                     echo '<td class="value">'.$value.'</td>';
                 }
             }
