@@ -8,7 +8,7 @@
 }
 
 .buttonModif {
-    padding: 5px;
+    padding: 0px;
 }
 
 .realButtonModif {
@@ -63,9 +63,12 @@ table {
     opacity: 80%;
 }
 
-img {
+.imgJoueur, .imgClub {
     background-color: white;
     border: 2px solid;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
 }
 
 * {
@@ -73,10 +76,9 @@ img {
     font-family: 'Oswald', sans-serif;
 }
 
-img {
-    display: inline-block;
-    width: 100px;
-    height: 100px;
+.imgIcone {
+    width: 15px;
+    height: 15px;
 }
 
 input:invalid+span:after {

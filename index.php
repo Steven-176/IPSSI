@@ -135,10 +135,10 @@
         for ($i = 0 ; $i < count($tableau_joueur) ; $i++) {
             echo '<div class="Carte"><table>
             <thead>
-                <tr><th class="buttonModif" colspan="2"><button class="realButtonModif">Modif</button></th></tr>
+                <tr><th class="buttonModif" colspan="2"><button class="realButtonModif"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/84/84380.png"></button></th></tr>
                 <tr>
                     <th>'.$tableau_joueur[$i]['Prénom Nom'].'</th>
-                    <th><img src="'.$tableau_joueur[$i]['Photo'][0]['url'].'"></th>
+                    <th><img class="imgJoueur" src="'.$tableau_joueur[$i]['Photo'][0]['url'].'"></th>
                 </tr>
             </thead>
             <tbody><span class="bodyinfos">';
@@ -217,7 +217,7 @@
             echo '<div class="Equipe"><table>
             <tr>
             <theader>
-                <th rowspan="2" class="nomClub">'.$tableau_club[$i]['Nom'].'<br /><img src="'.$tableau_club[$i]['Logo'][0]['url'].'"></th>
+                <th rowspan="2" class="nomClub">'.$tableau_club[$i]['Nom'].'<br /><img class="imgClub" src="'.$tableau_club[$i]['Logo'][0]['url'].'"></th>
             </theader>';
 
             foreach($tableau_club[$i] as $infos => $value){
