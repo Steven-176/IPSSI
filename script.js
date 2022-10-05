@@ -103,6 +103,10 @@ function addPlayer() {
             console.log(`Erreur : ${error.message}`);
         })
     }
+
+    setTimeout(function() {
+        window.location.reload();
+    }, 5000);
 }
 
 function modifPlayer(i) {
