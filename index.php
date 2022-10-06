@@ -149,7 +149,7 @@
 
         $keyinfos = array_keys($tableau_joueur[0]);
 
-        //<button class="realButtonModif" onclick="deletePlayer('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/401/401036.png">
+
 
         for ($i = 0 ; $i < count($tableau_joueur) ; $i++) {
 
@@ -159,7 +159,10 @@
             <span id="'.$keyinfos[11].'_'.$i.'" class="joueurID">'.$tableau_joueur[$i]['IDClubJoueur'].'</span>
             <thead>
                 <tr>
-                    <th class="buttonModif"><button class="realButtonModif" onclick="modifPlayer('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/84/84380.png"></button></th>
+                    <th class="buttonModif">
+                        <button class="realButtonModif" onclick="modifPlayer('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/84/84380.png"></button>';
+                        echo'<button class="realButtonModif" id="delete_j" onclick="deletePlayer('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/401/401036.png"></button>';
+                    echo'</th>
                 </tr>
                 <tr>
                     <th><span id="'.$keyinfos[1].'_'.$i.'">'.$tableau_joueur[$i]['Prénom'].'</span><br /><span id="'.$keyinfos[2].'_'.$i.'">'.$tableau_joueur[$i]['NomJoueur'].'</span></th>
@@ -243,7 +246,7 @@
             <span id="'.$keyinfos[2].'_'.$i.'" class="joueurID">'.$tableau_club[$i]['Logo'][0]['url'].'</span>
             <tr>
             <theader>
-                <th rowspan="2" class="nomClub"><span id="'.$keyinfos[1].'_'.$i.'">'.$tableau_club[$i]['NomClub'].'</span><br /><img class="imgClub" src="'.$tableau_club[$i]['Logo'][0]['url'].'"></img></th>
+                <th rowspan="2" class="nomClubLogo"><span id="'.$keyinfos[1].'_'.$i.'">'.$tableau_club[$i]['NomClub'].'</span><br /><img class="imgClub" src="'.$tableau_club[$i]['Logo'][0]['url'].'"></img></th>
             </theader>';
 
             foreach($tableau_club[$i] as $infos => $value){
@@ -251,7 +254,8 @@
                     echo '<td class="infos">'.$infos.' :</td>';
                 }
             }    
-            echo '<td class="infos">Joueur :</td>';        
+            echo '<td class="infos">Joueur :</td>';
+            echo'<td rowspan="2"><button class="realButtonModifClub" onclick="modifClub('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/84/84380.png"></button></td>';        
             echo '</tr><tr>';
 
             foreach($tableau_club[$i] as $infos => $value){

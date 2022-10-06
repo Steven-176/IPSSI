@@ -3,6 +3,7 @@ var IDClub;
 
 const formulaireJ = document.querySelector('#ajout_j');
 const formulaireC = document.querySelector('#ajout_c');
+const formulaireDJ =  document.querySelector('#delete_j');
 
 formulaireJ.addEventListener('submit', (e)=>{
     e.preventDefault()
@@ -49,21 +50,7 @@ function addPlayer() {
             }]
         };
 
-        fetch(URL, {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        }).then((response) => {
-            if(response.ok){
-                response.json().then((data) => {
-                    console.log(data);
-                })
-            } else {
-                console.log('Erreur status != 200')
-            }
-        }).catch((error) => {
-            console.log(`Erreur : ${error.message}`);
-        })
+        airtableCom(URL, 'PATCH', data);
     }
     else
     {
@@ -90,29 +77,11 @@ function addPlayer() {
             }]
         };
 
-        fetch(URL, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        }).then((response) => {
-            if(response.ok){
-                response.json().then((data) => {
-                    console.log(data);
-                })
-            } else {
-                console.log('Erreur status != 200')
-            }
-        }).catch((error) => {
-            console.log(`Erreur : ${error.message}`);
-        })
+        airtableCom(URL, 'POST', data);
     }
 
     IDJoueur = null;
     IDClub = null;
-
-    setTimeout(function() {
-        window.location.reload();
-    }, 2000);
 }
 
 function modifPlayer(i) {
@@ -129,17 +98,6 @@ function modifPlayer(i) {
     var matchsJouesJoueur = parseInt(document.querySelector("#Matchs_"+i).innerHTML);
     var butsMarquesJoueur = parseInt(document.querySelector("#Buts_"+i).innerHTML);
     var passesDecisivesJoueur = parseInt(document.querySelector("#PassesD_"+i).innerHTML);
-
-    // console.log(prenomJoueur+" ; type "+typeof(prenomJoueur));
-    // console.log(nomJoueur+" ; type "+typeof(nomJoueur));
-    // console.log(imageJoueur+" ; type "+typeof(imageJoueur));
-    // console.log(nationaliteJoueur+" ; type "+typeof(nationaliteJoueur));
-    // console.log(posteJoueur+" ; type "+typeof(posteJoueur));
-    // console.log(clubJoueur+" ; type "+typeof(clubJoueur));
-    // console.log(maillotJoueur+" ; type "+typeof(maillotJoueur));
-    // console.log(matchsJouesJoueur+" ; type "+typeof(matchsJouesJoueur));
-    // console.log(butsMarquesJoueur+" ; type "+typeof(butsMarquesJoueur));
-    // console.log(passesDecisivesJoueur+" ; type "+typeof(passesDecisivesJoueur));
 
     document.querySelector("#Prénom_modif").value = prenomJoueur;
     document.querySelector("#NomJoueur_modif").value = nomJoueur;
@@ -191,21 +149,7 @@ function addClub() {
             }]
         };
 
-        fetch(URL, {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        }).then((response) => {
-            if(response.ok){
-                response.json().then((data) => {
-                    console.log(data);
-                })
-            } else {
-                console.log('Erreur status != 200')
-            }
-        }).catch((error) => {
-            console.log(`Erreur : ${error.message}`);
-        })
+        airtableCom(URL, 'PATCH', data);
     }
     else
     {
@@ -226,30 +170,14 @@ function addClub() {
             }]
         };
 
-        fetch(URL, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        }).then((response) => {
-            if(response.ok){
-                response.json().then((data) => {
-                    console.log(data);
-                })
-            } else {
-                console.log('Erreur status != 200')
-            }
-        }).catch((error) => {
-            console.log(`Erreur : ${error.message}`);
-        })
+        airtableCom(URL, 'POST', data);
     }
 
     IDJoueur = null;
     IDClub = null;
-
-    setTimeout(function() {
-        window.location.reload();
-    }, 2000);
 }
+
+
 
 function modifClub(i) {
 
@@ -257,10 +185,10 @@ function modifClub(i) {
 
     var nomClub = document.querySelector("#NomClub_"+i).innerHTML;
     var logoClub = document.querySelector("#Logo_"+i).innerHTML;
-    var classementClub = document.querySelector("#Classement_"+i).innerHTML;
-    var villeClub = parseInt(document.querySelector("#Ville"+i).innerHTML);
+    var classementClub = parseInt(document.querySelector("#Classement_"+i).innerHTML);
+    var villeClub = document.querySelector("#Ville_"+i).innerHTML;
     var creationClub = parseInt(document.querySelector("#Création_"+i).innerHTML);
-    var entraineurClub = parseInt(document.querySelector("#Entraîneur_"+i).innerHTML);
+    var entraineurClub = document.querySelector("#Entraîneur_"+i).innerHTML;
 
     document.querySelector("#NomClub_modif").value = nomClub;
     document.querySelector("#Logo_modif").value = logoClub;
@@ -268,4 +196,70 @@ function modifClub(i) {
     document.querySelector("#Ville_modif").value = villeClub;
     document.querySelector("#Création_modif").value = creationClub;
     document.querySelector("#Entraîneur_modif").value = entraineurClub;
+}
+
+
+
+
+/************
+ *  DELETE  *
+ ************/
+
+formulaireDJ.addEventListener('click', (e)=>{
+    e.preventDefault()
+    deletePlayer()
+})
+function deletePlayer(i) {
+    var ID = document.querySelector("#IDJoueur_"+i).innerHTML;
+
+    const API_KEY = 'keylGy9dvvUc5clRX';
+    const URL = `https://api.airtable.com/v0/appljQzgZO6yDwebG/Joueur/${ID}?api_key=${API_KEY}`; 
+
+    fetch(URL, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    }).then((response) => {
+        if(response.ok){
+            response.json().then((data) => {
+                console.log(data);
+            })
+        } else {
+            console.log('Erreur status != 200')
+        }
+    }).catch((error) => {
+        console.log(`Erreur : ${error.message}`);
+    })
+
+    setTimeout(function() {
+        window.location.reload();
+    }, 1000);
+}
+
+
+
+
+/************************************
+ *  Envoi de la requête à Airtable  *
+ ************************************/
+
+ function airtableCom(URL, method, data){
+    fetch(URL, {
+        method: method,
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then((response) => {
+        if(response.ok){
+            response.json().then((data) => {
+                console.log(data);
+            })
+        } else {
+            console.log('Erreur status != 200')
+        }
+    }).catch((error) => {
+        console.log(`Erreur : ${error.message}`);
+    })
+
+    setTimeout(function() {
+        window.location.reload();
+    }, 1000);
 }
