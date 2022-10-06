@@ -80,11 +80,17 @@
                 'Logo' => $table['records'][$ligne]['fields']['Logo'],
                 'Classement' => $table['records'][$ligne]['fields']['classement'],
                 'Ville' => $table['records'][$ligne]['fields']['ville'],
-                'Année de création' => $table['records'][$ligne]['fields']['annee_de_creation'],
+                'Création' => $table['records'][$ligne]['fields']['annee_de_creation'],
                 'Entraîneur' => $table['records'][$ligne]['fields']['entraineur'],
             );
-            foreach ($table['records'][$ligne]['fields']['nom (from joueur)'] as $joueur) {
-                $tab['Joueur'][] = $joueur;
+
+            $tabkey = array_keys($table['records'][$ligne]['fields']);
+            foreach ($tabkey as $key){
+                if ($key == 'joueur'){
+                    foreach ($table['records'][$ligne]['fields']['nom (from joueur)'] as $joueur) {
+                        $tab['Joueur'][] = $joueur;
+                    }
+                }
             }
             return $tab;
         }
@@ -119,7 +125,13 @@
         for ($i = 0 ; $i < count($resultatClub['records']) ; $i++){
             $tableau_club[$i] = getTableClub($resultatClub, $i);
 
-            $tableau_club[$i]['Joueur'] = join(',<br />', $tableau_club[$i]['Joueur']);
+            $tabkeyClub = array_keys($tableau_club[$i]);
+            
+            foreach ($tabkeyClub as $key){
+                if ($key == 'Joueur'){
+                    $tableau_club[$i]['Joueur'] = join(',<br />', $tableau_club[$i]['Joueur']);
+                }
+            }
         }
         
         /************************************/
@@ -136,6 +148,8 @@
         echo '<div class="Joueurs"><h2 class="title">Joueurs</h2>';
 
         $keyinfos = array_keys($tableau_joueur[0]);
+
+        //<button class="realButtonModif" onclick="deletePlayer('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/401/401036.png">
 
         for ($i = 0 ; $i < count($tableau_joueur) ; $i++) {
 
@@ -166,7 +180,7 @@
          *  Formulaire ajout de joueur  *
          ********************************/
 
-        echo '<div class="Carte"><form id="ajout">
+        echo '<div class="Carte"><form id="ajout_j">
         <table>
             <thead>
                 <tr>
@@ -174,7 +188,7 @@
                         <input type="text" id="'.$keyinfos[1].'_modif" placeholder="Prénom" maxlength="16" required><span class="validity"></span><br />
                         <input type="text" id="'.$keyinfos[2].'_modif" placeholder="Nom" maxlength="16" required><span class="validity"></span>    
                     </th>
-                    <th>    <input class="ImageFoot" id="'.$keyinfos[3].'_modif" type="text" placeholder="URL image du joueur" required><span class="validity"></span></th>
+                    <th>    <input class="ImageFoot" id="'.$keyinfos[3].'_modif" type="url" placeholder="URL image du joueur" required><span class="validity"></span></th>
                 </tr>
             </thead>
             <tbody><span class="bodyinfos">';
@@ -213,9 +227,9 @@
         echo '</div>';
 
 
-        /*************************** 
-         *  Affichage des Joueurs  *
-         ***************************/
+        /************************* 
+         *  Affichage des Clubs  *
+         *************************/
 
         echo '<div class="Clubs"><h2 class="title">Clubs</h2>';
 
@@ -223,22 +237,26 @@
 
         for ($i = 0 ; $i < count($tableau_club) ; $i++) {
 
+            //echo'<th rowspan="2" class="buttonModif"><button class="realButtonModifClub" onclick="modifClub('.$i.')"><img class="imgIcone" src="https://cdn-icons-png.flaticon.com/512/84/84380.png"></button></th>';
             echo '<div class="Equipe"><table>
+            <span id="'.$keyinfos[0].'_'.$i.'" class="joueurID">'.$tableau_club[$i]['IDClub'].'</span>
+            <span id="'.$keyinfos[2].'_'.$i.'" class="joueurID">'.$tableau_club[$i]['Logo'][0]['url'].'</span>
             <tr>
             <theader>
-                <th rowspan="2" class="nomClub">'.$tableau_club[$i]['NomClub'].'<br /><img class="imgClub" src="'.$tableau_club[$i]['Logo'][0]['url'].'"></img></th>
+                <th rowspan="2" class="nomClub"><span id="'.$keyinfos[1].'_'.$i.'">'.$tableau_club[$i]['NomClub'].'</span><br /><img class="imgClub" src="'.$tableau_club[$i]['Logo'][0]['url'].'"></img></th>
             </theader>';
 
             foreach($tableau_club[$i] as $infos => $value){
-                if($infos != 'NomClub' && $infos != 'Logo' && $infos != 'IDClub'){
+                if($infos != 'NomClub' && $infos != 'Logo' && $infos != 'IDClub' && $infos != 'Joueur'){
                     echo '<td class="infos">'.$infos.' :</td>';
                 }
-            }            
+            }    
+            echo '<td class="infos">Joueur :</td>';        
             echo '</tr><tr>';
 
             foreach($tableau_club[$i] as $infos => $value){
                 if($infos != 'NomClub' && $infos != 'Logo' && $infos != 'IDClub'){
-                    echo '<td class="value">'.$value.'</td>';
+                    echo '<td class="value"><span id="'.$infos.'_'.$i.'">'.$value.'</span></td>';
                 }
             }
             echo '</tr></table></div>';
@@ -248,30 +266,34 @@
          *  Formulaire ajout de club  *
          ******************************/
 
-            echo '<div class="Equipe"><table>
-            <tr>
-            <theader>
-                <th rowspan="2" class="nomClub"><input type="text" id="'.$keyinfos[1].'_modif" placeholder="Nom" maxlength="16" required><span class="validity"></span><br /><input class="ImageFoot" id="'.$keyinfos[2].'_modif" type="text" placeholder="URL image du joueur" required><span class="validity"></span></th>
-            </theader>';
+            echo '<div class="Equipe"><form id="ajout_c">
+            <table>
+                <tr>
+                <theader>
+                    <th rowspan="2" class="nomClub"><input type="text" id="'.$keyinfos[1].'_modif" placeholder="Nom du club" maxlength="16" required><span class="validity"></span><br /><input class="ImageFoot" id="'.$keyinfos[2].'_modif" type="text" placeholder="URL logo du club" required><span class="validity"></span></th>
+                </theader>';
 
-            foreach($keyinfos as $infos){
-                if($infos != 'NomClub' && $infos != 'Logo' && $infos != 'IDClub' && $infos != 'Joueur'){
-                    echo '<td class="infos">'.$infos.' :</td>';
+                foreach($keyinfos as $infos){
+                    if($infos != 'NomClub' && $infos != 'Logo' && $infos != 'IDClub' && $infos != 'Joueur'){
+                        echo '<td class="infos">'.$infos.' :</td>';
+                    }
                 }
-            }            
-            echo '</tr><tr>';
+                
+                echo '<td rowspan="2"><input type="submit" value="Ajouter le club"></td>';
+                
+                echo '</tr><tr>';
 
-            echo '<td class="infos"><input type="number" min="1" max="40" placeholder="1 - 40" id="'.$keyinfos[3].'_modif" required><span class="validity"></span></td>';
-            
-            echo '<td class="infos"><input type="text" id="'.$keyinfos[4].'_modif" placeholder="Nom" maxlength="12" required><span class="validity"></span></td>';
+                echo '<td class="infos"><input type="number" min="1" max="40" placeholder="1 - 40" id="'.$keyinfos[3].'_modif" required><span class="validity"></span></td>';
+                
+                echo '<td class="infos"><input type="text" id="'.$keyinfos[4].'_modif" placeholder="Nom" maxlength="12" required><span class="validity"></span></td>';
 
-            echo '<td class="infos"><input type="number" min="1800" max="2022" placeholder="1800 - 2022" id="'.$keyinfos[5].'_modif" required><span class="validity"></span></td>';
+                echo '<td class="infos"><input type="number" min="1800" max="2022" placeholder="1800 - 2022" id="'.$keyinfos[5].'_modif" required><span class="validity"></span></td>';
 
-            echo '<td class="infos"><input type="text" id="'.$keyinfos[6].'_modif" placeholder="Nom" maxlength="16" required><span class="validity"></span></td>';
+                echo '<td class="infos"><input type="text" id="'.$keyinfos[6].'_modif" placeholder="Nom" maxlength="16" required><span class="validity"></span></td>';
 
-            echo '</tr></table></div>';
+            echo '</tr></table></form></div>';
 
-        echo '</div>'
+            echo '</div>'
     ?>
 </body>
 </html>

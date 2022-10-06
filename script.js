@@ -1,7 +1,10 @@
 var IDJoueur;
+var IDClub;
 
-const formulaire = document.querySelector('#ajout')
-formulaire.addEventListener('submit', (e)=>{
+const formulaireJ = document.querySelector('#ajout_j');
+const formulaireC = document.querySelector('#ajout_c');
+
+formulaireJ.addEventListener('submit', (e)=>{
     e.preventDefault()
     addPlayer()
 })
@@ -104,9 +107,12 @@ function addPlayer() {
         })
     }
 
+    IDJoueur = null;
+    IDClub = null;
+
     setTimeout(function() {
         window.location.reload();
-    }, 5000);
+    }, 2000);
 }
 
 function modifPlayer(i) {
@@ -124,16 +130,16 @@ function modifPlayer(i) {
     var butsMarquesJoueur = parseInt(document.querySelector("#Buts_"+i).innerHTML);
     var passesDecisivesJoueur = parseInt(document.querySelector("#PassesD_"+i).innerHTML);
 
-    console.log(prenomJoueur+" ; type "+typeof(prenomJoueur));
-    console.log(nomJoueur+" ; type "+typeof(nomJoueur));
-    console.log(imageJoueur+" ; type "+typeof(imageJoueur));
-    console.log(nationaliteJoueur+" ; type "+typeof(nationaliteJoueur));
-    console.log(posteJoueur+" ; type "+typeof(posteJoueur));
-    console.log(clubJoueur+" ; type "+typeof(clubJoueur));
-    console.log(maillotJoueur+" ; type "+typeof(maillotJoueur));
-    console.log(matchsJouesJoueur+" ; type "+typeof(matchsJouesJoueur));
-    console.log(butsMarquesJoueur+" ; type "+typeof(butsMarquesJoueur));
-    console.log(passesDecisivesJoueur+" ; type "+typeof(passesDecisivesJoueur));
+    // console.log(prenomJoueur+" ; type "+typeof(prenomJoueur));
+    // console.log(nomJoueur+" ; type "+typeof(nomJoueur));
+    // console.log(imageJoueur+" ; type "+typeof(imageJoueur));
+    // console.log(nationaliteJoueur+" ; type "+typeof(nationaliteJoueur));
+    // console.log(posteJoueur+" ; type "+typeof(posteJoueur));
+    // console.log(clubJoueur+" ; type "+typeof(clubJoueur));
+    // console.log(maillotJoueur+" ; type "+typeof(maillotJoueur));
+    // console.log(matchsJouesJoueur+" ; type "+typeof(matchsJouesJoueur));
+    // console.log(butsMarquesJoueur+" ; type "+typeof(butsMarquesJoueur));
+    // console.log(passesDecisivesJoueur+" ; type "+typeof(passesDecisivesJoueur));
 
     document.querySelector("#Prénom_modif").value = prenomJoueur;
     document.querySelector("#NomJoueur_modif").value = nomJoueur;
@@ -147,3 +153,119 @@ function modifPlayer(i) {
     document.querySelector("#PassesD_modif").value = passesDecisivesJoueur;
 }
 
+
+
+
+formulaireC.addEventListener('submit', (e)=>{
+    e.preventDefault()
+    addClub()
+})
+function addClub() {
+
+    const API_KEY = 'keylGy9dvvUc5clRX';
+    const URL = `https://api.airtable.com/v0/appljQzgZO6yDwebG/Club?api_key=${API_KEY}`;  
+
+    var nomClub = document.querySelector("#NomClub_modif").value;
+    var logoClub = document.querySelector("#Logo_modif").value;
+    var classementClub = parseInt(document.querySelector("#Classement_modif").value);
+    var villeClub = document.querySelector("#Ville_modif").value;
+    var creationClub = parseInt(document.querySelector("#Création_modif").value);
+    var entraineurClub = document.querySelector("#Entraîneur_modif").value;
+
+    if (IDClub != null) {
+        let data = {
+            'records': [{
+                'id' : IDClub,
+                'fields': {
+                    'nom' : nomClub,
+                    'classement' : classementClub,
+                    'ville' : villeClub,
+                    'annee_de_creation' : creationClub,
+                    'entraineur' : entraineurClub,
+                    'Logo' : [
+                        {
+                            "url": logoClub,
+                        }
+                    ]
+                }
+            }]
+        };
+
+        fetch(URL, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((data) => {
+                    console.log(data);
+                })
+            } else {
+                console.log('Erreur status != 200')
+            }
+        }).catch((error) => {
+            console.log(`Erreur : ${error.message}`);
+        })
+    }
+    else
+    {
+        let data = {
+            'records': [{
+                'fields': {
+                    'nom' : nomClub,
+                    'classement' : classementClub,
+                    'ville' : villeClub,
+                    'annee_de_creation' : creationClub,
+                    'entraineur' : entraineurClub,
+                    'Logo' : [
+                        {
+                            "url": logoClub,
+                        }
+                    ]
+                }
+            }]
+        };
+
+        fetch(URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((data) => {
+                    console.log(data);
+                })
+            } else {
+                console.log('Erreur status != 200')
+            }
+        }).catch((error) => {
+            console.log(`Erreur : ${error.message}`);
+        })
+    }
+
+    IDJoueur = null;
+    IDClub = null;
+
+    setTimeout(function() {
+        window.location.reload();
+    }, 2000);
+}
+
+function modifClub(i) {
+
+    IDClub = document.querySelector("#IDClub_"+i).innerHTML;
+
+    var nomClub = document.querySelector("#NomClub_"+i).innerHTML;
+    var logoClub = document.querySelector("#Logo_"+i).innerHTML;
+    var classementClub = document.querySelector("#Classement_"+i).innerHTML;
+    var villeClub = parseInt(document.querySelector("#Ville"+i).innerHTML);
+    var creationClub = parseInt(document.querySelector("#Création_"+i).innerHTML);
+    var entraineurClub = parseInt(document.querySelector("#Entraîneur_"+i).innerHTML);
+
+    document.querySelector("#NomClub_modif").value = nomClub;
+    document.querySelector("#Logo_modif").value = logoClub;
+    document.querySelector("#Classement_modif").value = classementClub;
+    document.querySelector("#Ville_modif").value = villeClub;
+    document.querySelector("#Création_modif").value = creationClub;
+    document.querySelector("#Entraîneur_modif").value = entraineurClub;
+}
